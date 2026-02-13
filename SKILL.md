@@ -25,7 +25,7 @@ When the description is incomplete, a compiler fails. An LLM improvises. Fill ga
 
 ## Skill Config
 
-* The configuration file `config.md` is located at `.claude/skills/points/config.md` .
+* The configuration file `config.md` is located at `.claude/skills/points/config.md` . Same level as `SKILL.md`.
 
 ## Example
 * Assume the project name is "database".
