@@ -20,8 +20,12 @@ When the description is incomplete, a compiler fails. An LLM improvises. Fill ga
 
 1. For any changes to code, configuration files, or other logic, we must first update, extend, and most importantly verify the design in the **Points Spec**, and only then implement, while strictly ensuring all related referenced sections remain fully consistent and exactly aligned with the code.
 2. If we modify a spec file, make sure to update its parent and child files as needed, using both backward-tracing and recursive updates.
-3. Points is a fast-evolving language, and if we find that the language needs revision during development, we must first record the scenario and proposal; under `.claude/rules/points/issues/`, log each day’s issues in a separate Markdown file.
-4. If the language is modified in any way, we must record a changelog under `.claude/rules/points/changelog.md`, and if a change fixes an issue or adds a feature proposed in an issues file, we must reference the corresponding issue(s) number.
+3. Points is a fast-evolving language, so if we need to revise it during development, we must first record the scenario and proposal and log that day’s issues in a separate Markdown file. Read `config.md` to determine the issues directory and any other relevant configurations.
+4. If the language is modified in any way, we must record a changelog, and if a change fixes an issue or adds a feature proposed in an issues file, we must reference the corresponding issue(s) number. Read `config.md` to determine the changelog path and any other relevant configurations.
+
+## Skill Config
+
+* The configuration file `config.md` is located at `.claude/skills/points/config.md` .
 
 ## Example
 * Assume the project name is "database".
@@ -87,11 +91,9 @@ For simplicity, in the Points language there is no fundamental distinction betwe
    * The first-level entries are multi-party’s inter-related component, and the set of dependent components forms a single dependency group. If they can be partitioned into multiple independent groups, do not mix them together.
 
 9. **Spec file name**
-
-   * **Root spec** is essentially a topic spec—the top-level spec for the `Database` topic in the example—but for easier tree-style browsing and to hide project-specific differences, we name this top-level spec file `Root`.
    * **Topic spec** use the topic’s full ID as the filename, e.g. `Database-1.Proxy-1.ProxyManager-1.ProxyPool`.
    * **Inter-file dependency spec files** use filenames with two parts: the `Dep-` prefix and `<ShortenedFirstID>-<ShortenedSecondID>` format multi-party combination, e.g. `Dep-1.1.ProxyManager-1.2.LoadBalancer`.
-
+   
 10. **Spec text format**
 
     * File format:
@@ -116,7 +118,7 @@ Points uses a flat file layout with no nested directories; hierarchy is expresse
 
 ```
 points/
-├── Root.md    ← System overview + top components
+├── Database.md    ← System overview + top components
 ├── Database-1.Proxy.md   ← Refinement of one root component
 ├── Database-1.Proxy-1.ProxyManager.md   ← Refinement of one second layer component
 ├── ...
@@ -185,11 +187,3 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 1. Read both code and Points spec for a component.
 2. Identify mismatches in either direction (spec says X, code does Y; code does Z, spec is silent).
 3. For each mismatch, recommend whether to update the spec or the code, with rationale.
-
-## Current Spec Location
-
-The Points spec for this project lives at `points/` in the repository root.
-
-Root file: `points/root.md` 
-
-Dependencies: `points/deps.md`
