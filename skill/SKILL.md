@@ -213,17 +213,23 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 
 ### `add` — Add a new point or component
 1. Read the target file.
-2. Determine the correct ID (next available under the parent).
-3. Write one sentence per line, precise and complete.
-4. Update `## Relationships` in the file if the new point has cross-references.
-5. Update `deps.md` if the new point has inter-file dependencies.
-6. If adding a component to the root file, check whether a child file should be created.
+2. Determine the correct ID (next available under the parent), following the hierarchical ID format (Format Rule 5).
+3. Write the new content following spec text format: bold component IDs, 3-space indentation for points, one sentence per line (Format Rules 1, 10).
+4. If the new point references other points, include cross-references using full IDs inline in the description (Format Rule 6).
+5. Update the `## Intra-file Dependencies` section if the new point introduces intra-file dependencies (Format Rule 7).
+6. If the new point introduces inter-file dependencies, create or update the corresponding `Dep-*.md` file (Format Rules 8, 9).
+7. Update parent and child spec files to maintain consistency (Action Rule 2).
+8. If adding a component, check whether a child file should be created (Format Rule 4).
+9. Read `config.md` for issues/changelog paths if this addition requires a language revision note (Action Rules 3, 4).
 
 ### `refine` — Expand a point into more detail
 1. Read the point and its context.
-2. If refining a component: create or update its child file.
-3. Maintain parent-child redundancy (the parent's key design point should match the child's component).
-4. Update relationships and deps.
+2. If refining a component: create or update its child file, following the spec file naming convention (Format Rule 9).
+3. Maintain parent-child redundancy — the parent's key design point must match the child's component (Format Rule 4).
+4. Update parent and child spec files as needed (Action Rule 2).
+5. Update `## Intra-file Dependencies` if refinement introduces new intra-file dependencies (Format Rule 7).
+6. Create or update `Dep-*.md` files if refinement introduces inter-file dependencies (Format Rules 8, 9).
+7. Ensure all cross-references use full IDs (Format Rule 6).
 
 ### `trace` — Run a narrated simulation
 1. Read the relevant definition files.
@@ -233,12 +239,13 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 5. Output the trace as a numbered walkthrough with explicit state at each step.
 
 ### `verify` — Check a file or the whole spec for consistency
-1. Every point has a globally unique ID (no duplicates across all files).
-2. Every file follows format rules (one sentence per line, two levels, numbered hierarchy).
-3. All cross-references use explicit IDs.
-4. All inter-file references appear in `deps.md`.
-5. Parent-child redundancy is present.
-6. Report any issues found.
+1. Every point has a globally unique ID — no duplicates across all files (Format Rule 5).
+2. Every file follows spec text format: bold component IDs, 3-space indentation for points, one sentence per line, two information levels per file (Format Rules 1, 3, 10).
+3. All cross-references use full IDs, not shortened numeric prefixes (Format Rule 6).
+4. Every topic spec file has an `## Intra-file Dependencies` section (Format Rule 7).
+5. All inter-file dependencies have a corresponding `Dep-*.md` file with correct naming and structure (Format Rules 8, 9).
+6. Parent-child redundancy is present and consistent (Format Rule 4).
+7. Report any issues found.
 
 ### `evolve` — Update definitions based on code changes
 1. Read the code that changed (git diff or specified files).
