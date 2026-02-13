@@ -108,7 +108,7 @@ For simplicity, in the Points language there is no fundamental distinction betwe
       * Components' description uses normal body text.
       * Points under a component use normal body text, e.g. `1.1.ProxyManager`.
       * Points' description uses normal body text.
-      * Use 3-space indentation per hierarchy level: 3 spaces for components and 6 spaces for points.
+      * Use 3-space indentation: components at no indentation, points at 3-space indentation.  
     * Intra-file Dependencies
       * All intra-file dependencies must be listed under the **Dependencies** section. The section title uses a level-2 heading, e.g. `## Intra-file Dependencies`.
 
@@ -127,7 +127,95 @@ points/
 
 ## Example Spec Files
 
+**Database.md (root topic spec)**
 
+```markdown
+# Database
+
+A distributed database that routes queries through a proxy layer, logs writes to a WAL, and stores data across sharded nodes.
+
+## Components
+
+**1.Proxy**
+Accepts client connections, parses queries, and forwards them to the correct data node.
+   1.1.ProxyManager
+   Maintains a pool of proxy instances and handles lifecycle (start, stop, restart).
+   1.2.LoadBalancer
+   Distributes incoming connections across proxy instances using round-robin.
+
+**2.WAL**
+Write-ahead log that durably records every mutation before it reaches storage.
+   2.1.SegmentWriter
+   Appends entries to the current WAL segment; rotates when the segment reaches its size limit.
+
+**3.DataNode**
+Holds a shard of the dataset and executes read/write operations locally.
+   3.1.ShardRouter
+   Maps a key to its owning shard using consistent hashing.
+
+**4.Storage**
+Persistent key-value engine underneath each data node.
+   4.1.Compactor
+   Merges SSTables in the background to reclaim space and reduce read amplification.
+
+## Intra-file Dependencies
+
+**1.Proxy-2.WAL**
+   1.Proxy-2.WAL.1
+   Proxy forwards every write to WAL before acknowledging the client.
+
+**1.Proxy-3.DataNode**
+   1.Proxy-3.DataNode.1
+   Proxy uses Database-3.DataNode-3.1.ShardRouter to resolve which node handles a given key.
+```
+
+**Database-1.Proxy.md (child topic spec)**
+
+```markdown
+# Database-1.Proxy
+
+Accepts client connections, parses queries, and forwards them to the correct data node.
+
+## Components
+
+**1.1.ProxyManager**
+Maintains a pool of proxy instances and handles lifecycle (start, stop, restart).
+   1.1.1.ProxyPool
+   Fixed-size pool of reusable proxy workers; grows on demand up to a configured cap.
+   1.1.2.HealthCheck
+   Pings each proxy worker on a timer; removes unresponsive workers from the pool.
+
+**1.2.LoadBalancer**
+Distributes incoming connections across proxy instances using round-robin.
+   1.2.1.WeightTable
+   Per-instance weight derived from recent latency; updated every health-check cycle.
+
+## Intra-file Dependencies
+
+**1.1.ProxyManager-1.2.LoadBalancer**
+   1.1.ProxyManager-1.2.LoadBalancer.1
+   LoadBalancer reads the live worker list from ProxyPool to know which instances are available.
+   1.1.ProxyManager-1.2.LoadBalancer.2
+   HealthCheck removal of a worker triggers LoadBalancer to recompute the WeightTable.
+```
+
+**Dep-1.1.ProxyManager-1.2.LoadBalancer.md (inter-file dependency spec)**
+
+```markdown
+# Dep-1.1.ProxyManager-1.2.LoadBalancer
+
+## Dependencies
+
+**1.1.1.ProxyPool-1.2.1.WeightTable**
+   1.1.1.ProxyPool-1.2.1.WeightTable.1
+   WeightTable entries are keyed by worker ID; when ProxyPool adds or removes a worker, WeightTable must insert or delete the corresponding entry.
+   1.1.1.ProxyPool-1.2.1.WeightTable.2
+   ProxyPool exposes a change-notification callback; WeightTable subscribes at startup.
+
+**1.1.2.HealthCheck-1.2.1.WeightTable**
+   1.1.2.HealthCheck-1.2.1.WeightTable.1
+   Each health-check cycle emits per-worker latency; WeightTable uses this to recalculate weights.
+```
 
 ## Two Layers: Definitions and Traces
 
