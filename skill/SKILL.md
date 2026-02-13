@@ -29,7 +29,7 @@ When the description is incomplete, a compiler fails. An LLM improvises. Fill ga
 
 ## Example
 * Assume the project name is "database".
-* "database" has a component "proxy", "WAL", "data node", "storage".
+* "database" has a component "proxy".
 * "proxy" has a component "proxy manager", "load balancer".
 * "proxy manager" has a component "proxy pool".
 
@@ -132,7 +132,7 @@ points/
 ```markdown
 # Database
 
-A distributed database that routes queries through a proxy layer, logs writes to a WAL, and stores data across sharded nodes.
+A distributed database that routes queries through a proxy layer.
 
 ## Components
 
@@ -142,31 +142,6 @@ Accepts client connections, parses queries, and forwards them to the correct dat
    Maintains a pool of proxy instances and handles lifecycle (start, stop, restart).
    1.2.LoadBalancer
    Distributes incoming connections across proxy instances using round-robin.
-
-**2.WAL**
-Write-ahead log that durably records every mutation before it reaches storage.
-   2.1.SegmentWriter
-   Appends entries to the current WAL segment; rotates when the segment reaches its size limit.
-
-**3.DataNode**
-Holds a shard of the dataset and executes read/write operations locally.
-   3.1.ShardRouter
-   Maps a key to its owning shard using consistent hashing.
-
-**4.Storage**
-Persistent key-value engine underneath each data node.
-   4.1.Compactor
-   Merges SSTables in the background to reclaim space and reduce read amplification.
-
-## Intra-file Dependencies
-
-**1.Proxy-2.WAL**
-   1.Proxy-2.WAL.1
-   Proxy forwards every write to WAL before acknowledging the client.
-
-**1.Proxy-3.DataNode**
-   1.Proxy-3.DataNode.1
-   Proxy uses Database-3.DataNode-3.1.ShardRouter to resolve which node handles a given key.
 ```
 
 **Database-1.Proxy.md (child topic spec)**
