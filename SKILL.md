@@ -118,7 +118,19 @@ For simplicity, in the Points language there is no fundamental distinction betwe
       * Multiple related points are grouped in one bracket with a shared reason.
       * Files with no spec link omit the block entirely.
 
-11. **Spec text format**
+11. **Proposals**
+
+    * Spec files describe only what is implemented (ground truth).
+    * Aspirational designs, planned features, and proposed changes live in a separate `proposals/` subdirectory under the spec directory.
+    * One proposals file per topic, named after the topic spec file: `proposals/<TopicID>.md`.
+    * The file opens with a brief introduction (one or two sentences) describing what the proposal aims to achieve.
+    * Each section (level-2 heading = component being extended) contains two parts:
+      * **Involved points**: the existing spec points that the proposal touches or depends on, listed with their full IDs and current descriptions.
+      * **Proposal**: the proposed changes, each starting with `- `, without global IDs (IDs are assigned at merge time when the proposal is implemented).
+    * When a proposal is implemented, assign IDs, move its content into the main spec file, and delete the corresponding section from the proposals file.
+    * If a proposals file becomes empty after all its proposals are implemented, delete the file.
+
+12. **Spec text format**
 
     * File format:
       * All Points spec files must be written in Markdown.
@@ -146,7 +158,9 @@ points/
 ├── Database-1.Proxy.md   ← Refinement of one root component
 ├── Database-1.Proxy-1.ProxyManager.md   ← Refinement of one second layer component
 ├── ...
-└── Dep-1.1.ProxyManager-1.2.LoadBalancer.md
+├── Dep-1.1.ProxyManager-1.2.LoadBalancer.md
+└── proposals/
+    └── Database-1.Proxy.md   ← Aspirational designs for the Proxy topic
 ```
 
 ## Example Spec Files
@@ -224,6 +238,25 @@ Distributes incoming connections across proxy instances using round-robin.
    Each health-check cycle emits per-worker latency; WeightTable uses this to recalculate weights.
 ```
 
+**proposals/Database-1.Proxy.md (proposal file)**
+
+```markdown
+# Proposals: Database-1.Proxy
+
+Allow proxy workers to finish in-flight connections before being removed, avoiding abrupt disconnects during scaling or maintenance.
+
+## 1.1.ProxyManager
+
+**Involved points**
+   1.1.1.ProxyPool Fixed-size pool of reusable proxy workers; grows on demand up to a configured cap.
+   1.1.2.HealthCheck Pings each proxy worker on a timer; removes unresponsive workers from the pool.
+
+**Proposal: Graceful drain mode**
+   - Add a drain state to ProxyPool that stops accepting new connections while existing ones finish.
+   - HealthCheck skips draining workers so they are not removed prematurely.
+   - Once all connections on a draining worker close, the worker is removed from the pool.
+```
+
 ## Two Layers: Definitions and Traces
 
 ### Definitions (what the system is)
@@ -246,14 +279,15 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 ### `add` — Add a new point or component
 1. Read the target file.
 2. Determine the correct ID (next available under the parent), following the hierarchical ID format (Format Rule 5).
-3. Write the new content following spec text format: bold component IDs, 3-space indentation for points, one sentence per line (Format Rules 1, 11).
+3. Write the new content following spec text format: bold component IDs, 3-space indentation for points, one sentence per line (Format Rules 1, 12).
 4. If the new point references other points, include cross-references using full IDs inline in the description (Format Rule 6).
 5. Update the `## Intra-file Dependencies` section if the new point introduces intra-file dependencies (Format Rule 7).
 6. If the new point introduces inter-file dependencies, create or update the corresponding `Dep-*.md` file (Format Rules 8, 9).
 7. Update parent and child spec files to maintain consistency (Action Rule 2).
 8. If adding a component, check whether a child file should be created (Format Rule 4).
 9. If the new component has known code, add entries to `## Code Mapping` in the spec and `# Points Spec References:` in the source files (Format Rule 10).
-10. Read `config.md` for issues/changelog paths if this addition requires a language revision note (Action Rules 3, 4).
+10. If the new point is aspirational (not yet implemented), add it to the proposals file instead of the main spec (Format Rule 11).
+11. Read `config.md` for issues/changelog paths if this addition requires a language revision note (Action Rules 3, 4).
 
 ### `refine` — Expand a point into more detail
 1. Read the point and its context.
@@ -274,7 +308,7 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 
 ### `verify` — Check a file or the whole spec for consistency
 1. Every point has a globally unique ID — no duplicates across all files (Format Rule 5).
-2. Every file follows spec text format: bold component IDs, 3-space indentation for points, one sentence per line, two information levels per file (Format Rules 1, 3, 11).
+2. Every file follows spec text format: bold component IDs, 3-space indentation for points, one sentence per line, two information levels per file (Format Rules 1, 3, 12).
 3. All cross-references use full IDs, not shortened numeric prefixes (Format Rule 6).
 4. Every topic spec file has an `## Intra-file Dependencies` section (Format Rule 7).
 5. All inter-file dependencies have a corresponding `Dep-*.md` file with correct naming and structure (Format Rules 8, 9).

@@ -5,12 +5,13 @@
 ### Added
 - **Action Rule 5**: explicit separation of language issues from project-specific spec issues. Language issues/changelog track Points language evolution only; spec consistency issues are reported directly to the user. (Issue 10)
 - **Format Rule 10**: bidirectional code traceability — spec-side `## Code Mapping` section per topic spec file (component → file paths + grep keywords) and code-side `# Points Spec References:` comment header per source file (`[FullID, ...] reason`). (Issue 1)
+- **Format Rule 11**: proposals separation — spec files contain only implemented ground truth; aspirational designs live in `proposals/<TopicID>.md` files under the spec directory. (Issue 2)
 
 ### Changed
 - **Format Rule 8**: clarified "independent" for multi-party dependency grouping — two pairs are independent if removing either doesn't affect the other; shared mechanism → group, coincidental common party → split. (Issue 3)
 - **Verify action steps 7-8**: split "Report any issues found" into two steps — step 7 for spec issues (report to user), step 8 for language observations (record to issues file). (Issue 10)
 - **config.md**: relabeled "Issues Directory" → "Language Issues Directory" and "Changelog" → "Language Changelog" with scope clarification. (Issue 10)
-- **Format Rule 10 → 11**: old "Spec text format" rule renumbered to 11 to make room for new code traceability rule. (Issue 1)
+- **Format Rule 10 → 12**: old "Spec text format" rule renumbered to 12 (was 11, then 12 after proposals rule inserted). (Issues 1, 2)
 - **Actions updated**: `add` (step 9), `refine` (step 8), `evolve` (steps 2-3, 7), `sync` (steps 2-3, 5), `verify` (step 7) now reference code traceability (Format Rule 10). (Issue 1)
 
 ## 2026-02-13
