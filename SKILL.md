@@ -89,7 +89,9 @@ For simplicity, in the Points language there is no fundamental distinction betwe
    * Each inter-file dependency spec file should describe one minimal multi-party dependency.
    * An inter-file dependency spec file uses the same internal structure as **Intra-file Dependencies**.
    * In an inter-file dependency spec file, there is only a **Dependencies** section, no **Components** section included.
-   * The first-level entries are multi-party’s inter-related component, and the set of dependent components forms a single dependency group. If they can be partitioned into multiple independent groups, do not mix them together.
+   * The first-level entries are multi-party's inter-related component, and the set of dependent components forms a single dependency group. If they can be partitioned into multiple independent groups, do not mix them together.
+   * Two dependency pairs are independent if removing either would not affect the description or correctness of the other.
+   * Pairs that share a mechanism (e.g., the same callback, bridge, or data flow) belong in one file; pairs that merely share a common party but describe unrelated interactions should be split into separate files.
 
 9. **Spec file name**
    * **Topic spec** use the topic’s full ID as the filename, e.g. `Database-1.Proxy-1.ProxyManager-1.ProxyPool`.

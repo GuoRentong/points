@@ -7,6 +7,7 @@
 - **Format Rule 10**: bidirectional code traceability — spec-side `## Code Mapping` section per topic spec file (component → file paths + grep keywords) and code-side `# Points Spec References:` comment header per source file (`[FullID, ...] reason`). (Issue 1)
 
 ### Changed
+- **Format Rule 8**: clarified "independent" for multi-party dependency grouping — two pairs are independent if removing either doesn't affect the other; shared mechanism → group, coincidental common party → split. (Issue 3)
 - **Verify action steps 7-8**: split "Report any issues found" into two steps — step 7 for spec issues (report to user), step 8 for language observations (record to issues file). (Issue 10)
 - **config.md**: relabeled "Issues Directory" → "Language Issues Directory" and "Changelog" → "Language Changelog" with scope clarification. (Issue 10)
 - **Format Rule 10 → 11**: old "Spec text format" rule renumbered to 11 to make room for new code traceability rule. (Issue 1)
