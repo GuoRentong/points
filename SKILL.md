@@ -126,7 +126,7 @@ For simplicity, in the Points language there is no fundamental distinction betwe
     * The file opens with a brief introduction (one or two sentences) describing what the proposal aims to achieve.
     * Each section (level-2 heading = component being extended) contains two parts:
       * **Involved points**: the existing spec points that the proposal touches or depends on, listed with their full IDs and current descriptions.
-      * **Proposal**: the proposed changes, each starting with `- `, without global IDs (IDs are assigned at merge time when the proposal is implemented).
+      * **Proposal**: the proposed changes, written in the same style as spec points (one sentence per line, 3-space indent) so they can be moved directly into the spec file with minimal editing; no global IDs (assigned at merge time).
     * When a proposal is implemented, assign IDs, move its content into the main spec file, and delete the corresponding section from the proposals file.
     * If a proposals file becomes empty after all its proposals are implemented, delete the file.
 
@@ -247,14 +247,14 @@ Allow proxy workers to finish in-flight connections before being removed, avoidi
 
 ## 1.1.ProxyManager
 
-**Involved points**
+- **Involved points**
    1.1.1.ProxyPool Fixed-size pool of reusable proxy workers; grows on demand up to a configured cap.
    1.1.2.HealthCheck Pings each proxy worker on a timer; removes unresponsive workers from the pool.
 
-**Proposal: Graceful drain mode**
-   - Add a drain state to ProxyPool that stops accepting new connections while existing ones finish.
-   - HealthCheck skips draining workers so they are not removed prematurely.
-   - Once all connections on a draining worker close, the worker is removed from the pool.
+- **Proposal: Graceful drain mode**
+   ProxyPool gains a drain state that stops accepting new connections while existing ones finish.
+   HealthCheck skips draining workers so they are not removed prematurely.
+   Once all connections on a draining worker close, the worker is removed from the pool.
 ```
 
 ## Two Layers: Definitions and Traces
