@@ -122,7 +122,7 @@ For simplicity, in the Points language there is no fundamental distinction betwe
 
     * Spec files describe only what is implemented (ground truth).
     * Aspirational designs, planned features, and proposed changes live in a separate `proposals/` subdirectory under the spec directory.
-    * One proposals file per topic, named after the topic spec file: `proposals/<TopicID>.md`.
+    * Proposal files are named `proposals/<YYYY-MM-DD-HH> <proposal-brief>.md`, where the timestamp is creation time and the brief is a short kebab-case summary.
     * The file opens with a brief introduction (one or two sentences) describing what the proposal aims to achieve.
     * Each section (level-2 heading = component being extended) contains two parts:
       * **Involved points**: the existing spec points that the proposal touches or depends on, listed with their full IDs and current descriptions.
@@ -160,7 +160,7 @@ points/
 ├── ...
 ├── Dep-1.1.ProxyManager-1.2.LoadBalancer.md
 └── proposals/
-    └── Database-1.Proxy.md   ← Aspirational designs for the Proxy topic
+    └── 2026-02-14-15 proxy-graceful-drain.md   ← Aspirational design proposal
 ```
 
 ## Example Spec Files
@@ -238,7 +238,7 @@ Distributes incoming connections across proxy instances using round-robin.
    Each health-check cycle emits per-worker latency; WeightTable uses this to recalculate weights.
 ```
 
-**proposals/Database-1.Proxy.md (proposal file)**
+**proposals/2026-02-14-15 proxy-graceful-drain.md (proposal file)**
 
 ```markdown
 # Proposals: Database-1.Proxy
