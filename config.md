@@ -5,11 +5,16 @@
 - Spec directory: `<path>/<to>/<project>/points/`
 - Root file: `<path>/<to>/<project>/points/<RootTopic>.md`
 
-## Issues Directory
+## Language Issues Directory
 
-- Path: `<path>/<to>/issues/`
+For tracking Points language evolution only (rule ambiguities, format gaps, new feature proposals).
+Do not record project-specific spec issues here.
+
+- Path: `issues/`
 - One Markdown file per day, named `YYYY-MM-DD.md`
 
-## Changelog
+## Language Changelog
 
-- Path: `<Path>/<To>/changelog.md`
+For tracking Points language modifications only.
+
+- Path: `changelog.md`

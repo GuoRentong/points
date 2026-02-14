@@ -20,8 +20,9 @@ When the description is incomplete, a compiler fails. An LLM improvises. Fill ga
 
 1. For any changes to code, configuration files, or other logic, we must first update, extend, and most importantly verify the design in the **Points Spec**, and only then implement, while strictly ensuring all related referenced sections remain fully consistent and exactly aligned with the code.
 2. If we modify a spec file, make sure to update its parent and child files as needed, using both backward-tracing and recursive updates.
-3. Points is a fast-evolving language, so if we need to revise it during development, we must first record the scenario and proposal and log that day’s issues in a separate Markdown file. Read `config.md` to determine the issues directory and any other relevant configurations.
+3. Points is a fast-evolving language, so if we need to revise it during development, we must first record the scenario and proposal and log that day's issues in a separate Markdown file. Read `config.md` to determine the issues directory and any other relevant configurations.
 4. If the language is modified in any way, we must record a changelog, and if a change fixes an issue or adds a feature proposed in an issues file, we must reference the corresponding issue(s) number. Read `config.md` to determine the changelog path and any other relevant configurations.
+5. Rules 3 and 4 apply exclusively to the **Points language itself** — its rules, format, actions, and file conventions. Project-specific spec issues (missing files, ID errors, redundancy gaps, content mismatches) are a separate concern: report them directly to the user and fix them in the spec files. Do not record project-specific spec issues in the language issues directory or changelog.
 
 ## Skill Config
 
@@ -245,7 +246,8 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 4. Every topic spec file has an `## Intra-file Dependencies` section (Format Rule 7).
 5. All inter-file dependencies have a corresponding `Dep-*.md` file with correct naming and structure (Format Rules 8, 9).
 6. Parent-child redundancy is present and consistent (Format Rule 4).
-7. Report any issues found.
+7. Report spec consistency issues directly to the user (these are project-specific, not language issues — see Action Rule 5).
+8. If the verify process reveals ambiguities, gaps, or tensions in the Points language rules themselves, record those observations in the language issues file (Action Rules 3, 4).
 
 ### `evolve` — Update definitions based on code changes
 1. Read the code that changed (git diff or specified files).
