@@ -95,7 +95,28 @@ For simplicity, in the Points language there is no fundamental distinction betwe
    * **Topic spec** use the topic’s full ID as the filename, e.g. `Database-1.Proxy-1.ProxyManager-1.ProxyPool`.
    * **Inter-file dependency spec files** use filenames with two parts: the `Dep-` prefix and `<ShortenedFirstID>-<ShortenedSecondID>` format multi-party combination, e.g. `Dep-1.1.ProxyManager-1.2.LoadBalancer`.
    
-10. **Spec text format**
+10. **Code traceability**
+
+    Points supports bidirectional traceability between spec and source code.
+
+    * **Spec → Code (`## Code Mapping` section)**
+      * Each topic spec file may include a `## Code Mapping` section, placed after `## Intra-file Dependencies`.
+      * Inter-file dependency spec files do not have a Code Mapping section.
+      * First level: bold component ID (same IDs used in `## Components`).
+      * Second level (3-space indent): `<relative-path> :: <keyword1>, <keyword2>, ...`
+      * Keywords are grep-friendly identifiers: class names, function names, constants, or other tokens that locate the relevant code.
+      * One line per source file.
+      * Components with no implementation yet are omitted from this section.
+
+    * **Code → Spec (source file header)**
+      * At the top of each source file (after shebang/encoding lines), a comment block lists related spec points.
+      * Marker line: `# Points Spec References:` (using the language's comment syntax).
+      * Each entry (3-space indent): `#   [<FullID1>, <FullID2>, ...] <one-sentence why>`
+      * Point IDs use full IDs (consistent with Format Rule 6).
+      * Multiple related points are grouped in one bracket with a shared reason.
+      * Files with no spec link omit the block entirely.
+
+11. **Spec text format**
 
     * File format:
       * All Points spec files must be written in Markdown.
@@ -173,6 +194,14 @@ Distributes incoming connections across proxy instances using round-robin.
    LoadBalancer reads the live worker list from ProxyPool to know which instances are available.
    1.1.ProxyManager-1.2.LoadBalancer.2
    HealthCheck removal of a worker triggers LoadBalancer to recompute the WeightTable.
+
+## Code Mapping
+
+**1.1.ProxyManager**
+   src/database/proxy/manager.py :: ProxyManager, start_worker, stop_worker
+
+**1.2.LoadBalancer**
+   src/database/proxy/balancer.py :: LoadBalancer, WeightTable, recompute_weights
 ```
 
 **Dep-1.1.ProxyManager-1.2.LoadBalancer.md (inter-file dependency spec)**
@@ -215,13 +244,14 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 ### `add` — Add a new point or component
 1. Read the target file.
 2. Determine the correct ID (next available under the parent), following the hierarchical ID format (Format Rule 5).
-3. Write the new content following spec text format: bold component IDs, 3-space indentation for points, one sentence per line (Format Rules 1, 10).
+3. Write the new content following spec text format: bold component IDs, 3-space indentation for points, one sentence per line (Format Rules 1, 11).
 4. If the new point references other points, include cross-references using full IDs inline in the description (Format Rule 6).
 5. Update the `## Intra-file Dependencies` section if the new point introduces intra-file dependencies (Format Rule 7).
 6. If the new point introduces inter-file dependencies, create or update the corresponding `Dep-*.md` file (Format Rules 8, 9).
 7. Update parent and child spec files to maintain consistency (Action Rule 2).
 8. If adding a component, check whether a child file should be created (Format Rule 4).
-9. Read `config.md` for issues/changelog paths if this addition requires a language revision note (Action Rules 3, 4).
+9. If the new component has known code, add entries to `## Code Mapping` in the spec and `# Points Spec References:` in the source files (Format Rule 10).
+10. Read `config.md` for issues/changelog paths if this addition requires a language revision note (Action Rules 3, 4).
 
 ### `refine` — Expand a point into more detail
 1. Read the point and its context.
@@ -231,6 +261,7 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 5. Update `## Intra-file Dependencies` if refinement introduces new intra-file dependencies (Format Rule 7).
 6. Create or update `Dep-*.md` files if refinement introduces inter-file dependencies (Format Rules 8, 9).
 7. Ensure all cross-references use full IDs (Format Rule 6).
+8. Update `## Code Mapping` if refined components have known code (Format Rule 10).
 
 ### `trace` — Run a narrated simulation
 1. Read the relevant definition files.
@@ -241,21 +272,28 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 
 ### `verify` — Check a file or the whole spec for consistency
 1. Every point has a globally unique ID — no duplicates across all files (Format Rule 5).
-2. Every file follows spec text format: bold component IDs, 3-space indentation for points, one sentence per line, two information levels per file (Format Rules 1, 3, 10).
+2. Every file follows spec text format: bold component IDs, 3-space indentation for points, one sentence per line, two information levels per file (Format Rules 1, 3, 11).
 3. All cross-references use full IDs, not shortened numeric prefixes (Format Rule 6).
 4. Every topic spec file has an `## Intra-file Dependencies` section (Format Rule 7).
 5. All inter-file dependencies have a corresponding `Dep-*.md` file with correct naming and structure (Format Rules 8, 9).
 6. Parent-child redundancy is present and consistent (Format Rule 4).
-7. Report spec consistency issues directly to the user (these are project-specific, not language issues — see Action Rule 5).
-8. If the verify process reveals ambiguities, gaps, or tensions in the Points language rules themselves, record those observations in the language issues file (Action Rules 3, 4).
+7. If `## Code Mapping` is present, verify that referenced files exist and keywords are findable via grep; verify that source files with `# Points Spec References:` reference valid point IDs (Format Rule 10).
+8. Report spec consistency issues directly to the user (these are project-specific, not language issues — see Action Rule 5).
+9. If the verify process reveals ambiguities, gaps, or tensions in the Points language rules themselves, record those observations in the language issues file (Action Rules 3, 4).
 
 ### `evolve` — Update definitions based on code changes
 1. Read the code that changed (git diff or specified files).
-2. Compare against current Points definitions.
-3. Identify gaps: new behaviors, changed invariants, new components.
-4. Propose specific definition updates with exact point IDs.
+2. Use `# Points Spec References:` headers in changed files to identify affected spec points.
+3. Use `## Code Mapping` sections to find all spec files that reference the changed code.
+4. Compare against current Points definitions.
+5. Identify gaps: new behaviors, changed invariants, new components.
+6. Propose specific definition updates with exact point IDs.
+7. Update both `## Code Mapping` and `# Points Spec References:` if code locations changed (Format Rule 10).
 
 ### `sync` — Align code and spec
 1. Read both code and Points spec for a component.
-2. Identify mismatches in either direction (spec says X, code does Y; code does Z, spec is silent).
-3. For each mismatch, recommend whether to update the spec or the code, with rationale.
+2. Use `## Code Mapping` to locate relevant source files and grep keywords.
+3. Use `# Points Spec References:` in source files to cross-check the reverse direction.
+4. Identify mismatches in either direction (spec says X, code does Y; code does Z, spec is silent).
+5. Check that Code Mapping entries and Points Spec References are consistent with each other.
+6. For each mismatch, recommend whether to update the spec or the code, with rationale.
