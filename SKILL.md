@@ -126,9 +126,9 @@ For simplicity, in the Points language there is no fundamental distinction betwe
     * The file opens with a brief introduction (one or two sentences) describing what the proposal aims to achieve.
     * Each section (level-2 heading = component being extended) contains two parts:
       * **Involved points**: the existing spec points that the proposal touches or depends on, listed with their full IDs and current descriptions.
-      * **Proposal**: the proposed changes, written in the same style as spec points (one sentence per line, 3-space indentation) so they can be moved directly into the spec file with minimal editing; no global IDs (assigned at merge time).
-    * When a proposal is implemented, assign IDs, move its content into the main spec file, and delete the corresponding section from the proposals file.
-    * If a proposals file becomes empty after all its proposals are implemented, delete the file.
+      * **Proposal**: the proposed changes, written in the same style as spec points (one sentence per line, 3-space indentation) so they can be moved directly into the spec file with minimal editing; no global IDs.
+    * When a proposal is implemented, integrate its content into the main spec file and assign spec IDs to the new points during integration.
+    * Once a proposal file is implemented, move it to `proposals/resolved/` (preserving its filename) for historical reference; do not delete or clean up resolved proposal content.
 
 12. **Spec text format**
 
@@ -160,7 +160,9 @@ points/
 ├── ...
 ├── Dep-1.1.ProxyManager-1.2.LoadBalancer.md
 └── proposals/
-    └── 2026-02-14-15 proxy-graceful-drain.md   ← Aspirational design proposal
+    ├── 2026-02-14-15 proxy-graceful-drain.md   ← Aspirational design proposal
+    └── resolved/
+        └── 2026-02-13-10 proxy-health-timeout.md   ← Implemented proposal (archived)
 ```
 
 ## Example Spec Files
