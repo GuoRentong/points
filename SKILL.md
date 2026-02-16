@@ -51,6 +51,8 @@ For simplicity, in the Points language there is no fundamental distinction betwe
 
    * **Intentional redundancy** between parent and child files — this creates chained recursive review.
 
+   * **Parent points that expand into child files must not reference implementation details.** These points describe what the component is responsible for, not how it works. Full evolving detail lives exclusively in the child file. Points that do not expand into child files carry full detail as normal.
+
    * Example:
 
      - In the top-level spec file where the topic is "database", database's first component is "proxy", proxy's first point is "proxy manager".
@@ -309,6 +311,8 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 5. Output the trace as a numbered walkthrough with explicit state at each step.
 
 ### `verify` — Check a file or the whole spec for consistency
+
+**Full mode** (default): checks the entire spec or a single file.
 1. Every point has a globally unique ID — no duplicates across all files (Format Rule 5).
 2. Every file follows spec text format: bold component IDs, 3-space indentation for points, one sentence per line, two information levels per file (Format Rules 1, 3, 12).
 3. All cross-references use full IDs, not shortened numeric prefixes (Format Rule 6).
@@ -318,6 +322,15 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 7. If `## Code Mapping` is present, verify that referenced files exist and keywords are findable via grep; verify that source files with `# Points Spec References:` reference valid point IDs (Format Rule 10).
 8. Report spec consistency issues directly to the user (these are project-specific, not language issues — see Action Rule 5).
 9. If the verify process reveals ambiguities, gaps, or tensions in the Points language rules themselves, record those observations in the language issues file (Action Rules 3, 4).
+
+**Local mode** (`--local`): scoped verification of only the changed parts.
+Invoked as `/points verify --local <spec-file-or-point-IDs>`.
+1. Identify the changed spec points (from the provided file or point IDs).
+2. Use `## Code Mapping` to find the source files that implement those points.
+3. Verify spec-to-code: each changed point's description matches the actual code behavior; Code Mapping keywords are findable via grep.
+4. Verify code-to-spec: `# Points Spec References:` in the affected source files reference valid, current point IDs.
+5. Check parent-child consistency: trace the changed file's parent and children for redundancy alignment (Format Rule 4).
+6. Report mismatches to the user.
 
 ### `evolve` — Update definitions based on code changes
 1. Read the code that changed (git diff or specified files).

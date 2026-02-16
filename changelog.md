@@ -1,5 +1,18 @@
 # Points Language Changelog
 
+## 2026-02-16
+
+### Changed
+- **Format Rule 4**: parent points that expand into child files must not reference implementation details; full evolving detail lives exclusively in the child file; points without child files carry full detail as normal. (Issue 13)
+
+## 2026-02-15
+
+### Added
+- **Verify action `--local` mode**: scoped verification using Code Mapping to check only changed spec points against their source files and parent/child consistency, instead of full-spec verification. (Issue 11)
+
+### Changed
+- **Workflow gate**: split into Phase 1 (spec-only edits) and Phase 2 (implementation after confirmation) with a HARD STOP requiring AskUserQuestion between them; Phase 1 restricts edits to `points/` files only; expanded rationalization deny list. (Issue 12)
+
 ## 2026-02-14
 
 ### Added
