@@ -16,13 +16,9 @@ The analogy is sketching. Top-level strokes are few but critical. Lower layers m
 
 When the description is incomplete, a compiler fails. An LLM improvises. Fill gaps with something plausible, and plausible is the most dangerous kind of wrong — it looks right, passes casual review, and embeds a silent assumption nobody agreed to. Therefore: completeness over formalism. Every word earns its place.
 
-## Action Rules
+## Workflow
 
-1. For any changes to code, configuration files, or other logic, we must first update, extend, and most importantly verify the design in the **Points Spec**, and only then implement, while strictly ensuring all related referenced sections remain fully consistent and exactly aligned with the code.
-2. If we modify a spec file, make sure to update its parent and child files as needed, using both backward-tracing and recursive updates.
-3. Points is a fast-evolving language, so if we need to revise it during development, we must first record the scenario and proposal and log that day's issues in a separate Markdown file. Read `config.md` to determine the issues directory and any other relevant configurations.
-4. If the language is modified in any way, we must record a changelog, and if a change fixes an issue or adds a feature proposed in an issues file, we must reference the corresponding issue(s) number. Read `config.md` to determine the changelog path and any other relevant configurations.
-5. Rules 3 and 4 apply exclusively to the **Points language itself** — its rules, format, actions, and file conventions. Project-specific spec issues (missing files, ID errors, redundancy gaps, content mismatches) are a separate concern: report them directly to the user and fix them in the spec files. Do not record project-specific spec issues in the language issues directory or changelog.
+See `.claude/rules/workflow.md` for the spec-first development workflow, parent/child consistency rules, and language evolution tracking.
 
 ## Skill Config
 
@@ -37,7 +33,7 @@ When the description is incomplete, a compiler fails. An LLM improvises. Fill ga
 For simplicity, in the Points language there is no fundamental distinction between a topic, a component, and a point; within a spec, “components” are the items under a topic and “points” are the items under a component, while generically we refer to topics, components, and points uniformly as the concept points.
 
 
-## Format Rules
+## Spec Rules
 
 1. **One sentence per line.** Every word earns its place.
 
@@ -116,7 +112,7 @@ For simplicity, in the Points language there is no fundamental distinction betwe
       * At the top of each source file (after shebang/encoding lines), a comment block lists related spec points.
       * Marker line: `# Points Spec References:` (using the language's comment syntax).
       * Each entry (3-space indent): `#   [<FullID1>, <FullID2>, ...] <one-sentence why>`
-      * Point IDs use full IDs (consistent with Format Rule 6).
+      * Point IDs use full IDs (consistent with Spec Rule 6).
       * Multiple related points are grouped in one bracket with a shared reason.
       * Files with no spec link omit the block entirely.
 
@@ -282,26 +278,26 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 
 ### `add` — Add a new point or component
 1. Read the target file.
-2. Determine the correct ID (next available under the parent), following the hierarchical ID format (Format Rule 5).
-3. Write the new content following spec text format: bold component IDs, 3-space indentation for points, one sentence per line (Format Rules 1, 12).
-4. If the new point references other points, include cross-references using full IDs inline in the description (Format Rule 6).
-5. Update the `## Intra-file Dependencies` section if the new point introduces intra-file dependencies (Format Rule 7).
-6. If the new point introduces inter-file dependencies, create or update the corresponding `Dep-*.md` file (Format Rules 8, 9).
-7. Update parent and child spec files to maintain consistency (Action Rule 2).
-8. If adding a component, check whether a child file should be created (Format Rule 4).
-9. If the new component has known code, add entries to `## Code Mapping` in the spec and `# Points Spec References:` in the source files (Format Rule 10).
-10. If the new point is aspirational (not yet implemented), add it to the proposals file instead of the main spec (Format Rule 11).
-11. Read `config.md` for issues/changelog paths if this addition requires a language revision note (Action Rules 3, 4).
+2. Determine the correct ID (next available under the parent), following the hierarchical ID format (Spec Rule 5).
+3. Write the new content following spec text format: bold component IDs, 3-space indentation for points, one sentence per line (Spec Rules 1, 12).
+4. If the new point references other points, include cross-references using full IDs inline in the description (Spec Rule 6).
+5. Update the `## Intra-file Dependencies` section if the new point introduces intra-file dependencies (Spec Rule 7).
+6. If the new point introduces inter-file dependencies, create or update the corresponding `Dep-*.md` file (Spec Rules 8, 9).
+7. Update parent and child spec files to maintain consistency (see `workflow.md`).
+8. If adding a component, check whether a child file should be created (Spec Rule 4).
+9. If the new component has known code, add entries to `## Code Mapping` in the spec and `# Points Spec References:` in the source files (Spec Rule 10).
+10. If the new point is aspirational (not yet implemented), add it to the proposals file instead of the main spec (Spec Rule 11).
+11. Read `config.md` for issues/changelog paths if this addition requires a language revision note (see `workflow.md`).
 
 ### `refine` — Expand a point into more detail
 1. Read the point and its context.
-2. If refining a component: create or update its child file, following the spec file naming convention (Format Rule 9).
-3. Maintain parent-child redundancy — the parent's key design point must match the child's component (Format Rule 4).
-4. Update parent and child spec files as needed (Action Rule 2).
-5. Update `## Intra-file Dependencies` if refinement introduces new intra-file dependencies (Format Rule 7).
-6. Create or update `Dep-*.md` files if refinement introduces inter-file dependencies (Format Rules 8, 9).
-7. Ensure all cross-references use full IDs (Format Rule 6).
-8. Update `## Code Mapping` if refined components have known code (Format Rule 10).
+2. If refining a component: create or update its child file, following the spec file naming convention (Spec Rule 9).
+3. Maintain parent-child redundancy — the parent's key design point must match the child's component (Spec Rule 4).
+4. Update parent and child spec files as needed (see `workflow.md`).
+5. Update `## Intra-file Dependencies` if refinement introduces new intra-file dependencies (Spec Rule 7).
+6. Create or update `Dep-*.md` files if refinement introduces inter-file dependencies (Spec Rules 8, 9).
+7. Ensure all cross-references use full IDs (Spec Rule 6).
+8. Update `## Code Mapping` if refined components have known code (Spec Rule 10).
 
 ### `trace` — Run a narrated simulation
 1. Read the relevant definition files.
@@ -313,15 +309,15 @@ When the user invokes `/points`, determine the action from $ARGUMENTS:
 ### `verify` — Check a file or the whole spec for consistency
 
 **Full mode** (default): checks the entire spec or a single file.
-1. Every point has a globally unique ID — no duplicates across all files (Format Rule 5).
-2. Every file follows spec text format: bold component IDs, 3-space indentation for points, one sentence per line, two information levels per file (Format Rules 1, 3, 12).
-3. All cross-references use full IDs, not shortened numeric prefixes (Format Rule 6).
-4. Every topic spec file has an `## Intra-file Dependencies` section (Format Rule 7).
-5. All inter-file dependencies have a corresponding `Dep-*.md` file with correct naming and structure (Format Rules 8, 9).
-6. Parent-child redundancy is present and consistent (Format Rule 4).
-7. If `## Code Mapping` is present, verify that referenced files exist and keywords are findable via grep; verify that source files with `# Points Spec References:` reference valid point IDs (Format Rule 10).
-8. Report spec consistency issues directly to the user (these are project-specific, not language issues — see Action Rule 5).
-9. If the verify process reveals ambiguities, gaps, or tensions in the Points language rules themselves, record those observations in the language issues file (Action Rules 3, 4).
+1. Every point has a globally unique ID — no duplicates across all files (Spec Rule 5).
+2. Every file follows spec text format: bold component IDs, 3-space indentation for points, one sentence per line, two information levels per file (Spec Rules 1, 3, 12).
+3. All cross-references use full IDs, not shortened numeric prefixes (Spec Rule 6).
+4. Every topic spec file has an `## Intra-file Dependencies` section (Spec Rule 7).
+5. All inter-file dependencies have a corresponding `Dep-*.md` file with correct naming and structure (Spec Rules 8, 9).
+6. Parent-child redundancy is present and consistent (Spec Rule 4).
+7. If `## Code Mapping` is present, verify that referenced files exist and keywords are findable via grep; verify that source files with `# Points Spec References:` reference valid point IDs (Spec Rule 10).
+8. Report spec consistency issues directly to the user (these are project-specific, not language issues — see `workflow.md`).
+9. If the verify process reveals ambiguities, gaps, or tensions in the Points language rules themselves, record those observations in the language issues file (see `workflow.md`).
 
 **Local mode** (`--local`): scoped verification of only the changed parts.
 Invoked as `/points verify --local <spec-file-or-point-IDs>`.
@@ -329,7 +325,7 @@ Invoked as `/points verify --local <spec-file-or-point-IDs>`.
 2. Use `## Code Mapping` to find the source files that implement those points.
 3. Verify spec-to-code: each changed point's description matches the actual code behavior; Code Mapping keywords are findable via grep.
 4. Verify code-to-spec: `# Points Spec References:` in the affected source files reference valid, current point IDs.
-5. Check parent-child consistency: trace the changed file's parent and children for redundancy alignment (Format Rule 4).
+5. Check parent-child consistency: trace the changed file's parent and children for redundancy alignment (Spec Rule 4).
 6. Report mismatches to the user.
 
 ### `evolve` — Update definitions based on code changes
@@ -339,7 +335,7 @@ Invoked as `/points verify --local <spec-file-or-point-IDs>`.
 4. Compare against current Points definitions.
 5. Identify gaps: new behaviors, changed invariants, new components.
 6. Propose specific definition updates with exact point IDs.
-7. Update both `## Code Mapping` and `# Points Spec References:` if code locations changed (Format Rule 10).
+7. Update both `## Code Mapping` and `# Points Spec References:` if code locations changed (Spec Rule 10).
 
 ### `sync` — Align code and spec
 1. Read both code and Points spec for a component.

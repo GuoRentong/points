@@ -3,7 +3,9 @@
 ## 2026-02-16
 
 ### Changed
-- **Format Rule 4**: parent points that expand into child files must not reference implementation details; full evolving detail lives exclusively in the child file; points without child files carry full detail as normal. (Issue 13)
+- **Format Rules → Spec Rules**: renamed section to reflect that most rules define spec structure, not formatting. (Issue 14)
+- **Action Rules → workflow.md**: merged Action Rules into workflow.md; rules 1-2 already covered by workflow; rules 3-5 (language evolution tracking) added as "When the Points language itself changes" section; SKILL.md now references workflow.md instead. (Issue 14)
+- **Spec Rule 4**: parent points that expand into child files must not reference implementation details; full evolving detail lives exclusively in the child file; points without child files carry full detail as normal. (Issue 13)
 
 ## 2026-02-15
 
