@@ -1,6 +1,6 @@
 ---
 name: points
-description: Write, refine, trace, and verify Points specs. Use when creating design specs, adding components, running traces, checking invariants, or evolving the points/ directory. Points is a multi-layer description language for system design, executed by LLMs rather than compilers.
+description: Write, refine, trace, and verify Points specs. Use when creating design specs, adding components, running traces, checking invariants, or evolving the spec/ directory. Points is a multi-layer description language for system design, executed by LLMs rather than compilers.
 argument-hint: [action] [target] (e.g. "add component proxy.md PX.7 HealthCheck", "trace backlog carry-over scenario", "verify zsxq.md")
 ---
 
@@ -151,7 +151,7 @@ For simplicity, in the Points language there is no fundamental distinction betwe
 Points uses a flat file layout with no nested directories; hierarchy is expressed through filenames.
 
 ```
-points/
+spec/
 ├── Database.md    ← System overview + top components
 ├── Database-1.Proxy.md   ← Refinement of one root component
 ├── Database-1.Proxy-1.ProxyManager.md   ← Refinement of one second layer component

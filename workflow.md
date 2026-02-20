@@ -7,10 +7,10 @@ HARD RULE: NEVER edit any source file (code, tests, configs) before presenting P
 For ANY project change — new features, bug fixes, refactors, config changes — you MUST:
 
 1. **Read both** the relevant source code AND the relevant Points spec files. You must read both before making any assessment. Code tells you what the implementation does; the spec tells you what it should do and what it claims to do. Never assess whether the spec needs changes without reading it first.
-2. **Update the Points spec** (`points/`) to reflect the intended change. Every design point must be validated against the code — never write spec changes based on imagination or assumption.
+2. **Update the Points spec** (`spec/`) to reflect the intended change. Every design point must be validated against the code — never write spec changes based on imagination or assumption.
 3. **Check parent and child spec files** for consistency. After modifying any spec file, trace backward to its parent and forward to its children — update all affected files so redundancy stays aligned.
 
-During Phase 1, the ONLY files you may edit are Points spec files under `points/`. Do NOT touch code, tests, configs, or any other file.
+During Phase 1, the ONLY files you may edit are Points spec files under `spec/`. Do NOT touch code, tests, configs, or any other file.
 
 ## HARD STOP: Confirm before implementation
 

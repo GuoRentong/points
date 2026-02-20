@@ -2,8 +2,8 @@
 
 ## Spec Location
 
-- Spec directory: `<path>/<to>/<project>/points/`
-- Root file: `<path>/<to>/<project>/points/<RootTopic>.md`
+- Spec directory: `<path>/<to>/<project>/spec/`
+- Root file: `<path>/<to>/<project>/spec/<RootTopic>.md`
 
 ## Language Issues Directory
 

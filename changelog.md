@@ -1,5 +1,10 @@
 # Points Language Changelog
 
+## 2026-02-20
+
+### Changed
+- **Spec directory**: renamed conventional spec directory from `points/` to `spec/` in config.md template, SKILL.md description and file structure, workflow.md Phase 1 scope. (Issue 15)
+
 ## 2026-02-16
 
 ### Changed
