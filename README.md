@@ -12,7 +12,14 @@ Clone this repo into your Claude Code skills directory:
 git clone https://github.com/GuoRentong/points.git ~/.claude/skills/points
 ```
 
-That's it. Claude Code automatically discovers skills in `~/.claude/skills/*/SKILL.md`.
+Then copy the workflow rules into your project's `.claude/rules/` so Claude Code loads them automatically:
+
+```bash
+mkdir -p <your-project>/.claude/rules
+cp ~/.claude/skills/points/workflow.md <your-project>/.claude/rules/workflow.md
+```
+
+Claude Code automatically discovers skills in `~/.claude/skills/*/SKILL.md` and loads rules from `.claude/rules/`.
 
 Once installed, invoke with `/points` in any Claude Code conversation:
 
@@ -26,6 +33,8 @@ Once installed, invoke with `/points` in any Claude Code conversation:
 
 ```bash
 cd ~/.claude/skills/points && git pull
+# Re-copy workflow.md if it changed
+cp ~/.claude/skills/points/workflow.md <your-project>/.claude/rules/workflow.md
 ```
 
 ## What It Does

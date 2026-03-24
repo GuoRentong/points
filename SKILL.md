@@ -18,7 +18,7 @@ When the description is incomplete, a compiler fails. An LLM improvises. Fill ga
 
 ## Workflow
 
-See `.claude/rules/workflow.md` for the spec-first development workflow, parent/child consistency rules, and language evolution tracking.
+See `workflow.md` (should be placed at `<your-project>/.claude/rules/workflow.md`) for the spec-first development workflow, parent/child consistency rules, and language evolution tracking.
 
 ## Skill Config
 
